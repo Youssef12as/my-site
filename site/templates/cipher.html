@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cipher
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h2>Cipher Tool</h2>
+            <form action="/cipher" method="POST" class="cipher-box">
+                <textarea name="plain_text" rows="4" autocomplete="off" autofocus placeholder="Type your text here..." required></textarea>
+                <input name="key" type="number" placeholder="Key Number" min="0" step="1" required>
+                <button type="submit" class="btn">Decode</button>
+            </form>
+        </div>
+
+        {% if cipher_text %}
+            <div class="result-box">
+                <h2>Result!</h2>
+                <p>{{ cipher_text }}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

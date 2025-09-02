@@ -19,6 +19,25 @@ db.execute("""
     )
 """)
 
+def rotate(ch,k):
+    if ch.isupper():
+        c = ord(ch) - ord('A')
+        c_i = (k + c) % 26
+        return chr(c_i + ord('A'))
+    elif ch.islower():
+        c = ord(ch) - ord('a')
+        c_i = (k + c) % 26
+        return chr(c_i + ord('a'))
+    else:
+        return ch
+
+def code(plain, key):
+    cipher = ""
+    for ch in plain:
+        cipher += rotate(ch, key)
+    return cipher
+
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -45,6 +64,29 @@ def home():
         return redirect(url_for("login"))
     return render_template("home.html", user=user)
 
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/portfolio")
+def portfolio():
+    return render_template("portfolio.html")
+
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+
+@app.route("/cipher", methods=["GET", "POST"])
+def cipher():
+    if request.method == "POST":
+        cipher_text = code(request.form.get("plain_text"), int(request.form.get("key")))
+        return render_template("cipher.html", cipher_text=cipher_text)
+    else:
+        return render_template("cipher.html")
 
 @app.route("/snake")
 def snake():
