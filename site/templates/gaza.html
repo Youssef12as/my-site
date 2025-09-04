@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gaza — دعم وتضامن</title>
+  <meta name="description" content="صفحة تبرعات وتوعية مظللة بثيم دارك، 3D hero، معرض صور، آيات وحديث ومكان للتبرع." />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- AOS for scroll animations -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Google Fonts (Arabic-friendly + Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root{
+      --bg-1: #06070a;
+      --bg-2: #0e1115;
+      --muted: #9aa4b2;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+    }
+
+    html,body { height:100%; background: linear-gradient(180deg,var(--bg-1),var(--bg-2)); color:#e6eef6; font-family: 'Inter', system-ui, -apple-system, 'Cairo', sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+    /* card base */
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      backdrop-filter: blur(6px);
+    }
+
+    /* small glow */
+    .glow {
+      box-shadow: 0 6px 30px rgba(16,185,129,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    /* canvas fits container */
+    #hero-canvas { width:100%; height:100%; display:block; }
+
+    /* gallery overlay text */
+    .overlay {
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
+    }
+
+    /* Arabic typography tuning */
+    .arabic { font-family: 'Cairo', sans-serif; }
+    .leading-tight-ar { line-height:1.05; }
+
+    /* responsive hero height */
+    .hero-h { min-height: 68vh; }
+    @media (max-width:640px){ .hero-h{ min-height: 48vh; } }
+  </style>
+</head>
+<body>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- NAV -->
+    <header class="flex items-center justify-between py-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center shadow">
+          <!-- simple icon -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M5 4v16l11-8L5 4z" fill="#ef4444"/></svg>
+        </div>
+        <div>
+          <h1 class="text-white text-lg font-bold arabic">غـزة</h1>
+          <p class="text-sm text-gray-400">تضامن • توعية • دعم</p>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-4">
+        <a href="#gaza" class="text-sm text-gray-300 hover:text-white transition arabic">عن غزه</a>
+        <a href="#quotes" class="text-sm text-gray-300 hover:text-white transition arabic">اقتباسات</a>
+        <a href="#donate" class="text-sm text-gray-300 hover:text-white transition arabic">تبرع</a>
+        <a href="#donate" class="ml-2 inline-flex items-center gap-2 rounded-lg px-4 py-2 bg-gradient-to-r from-red-600 to-pink-600 text-sm font-semibold shadow-lg hover:scale-[1.03] transform transition">
+          تبرع الآن
+        </a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero" class="relative hero-h rounded-3xl overflow-hidden glass glow">
+      <!-- Canvas -->
+      <div id="hero-3d" class="absolute inset-0">
+        <canvas id="hero-canvas" aria-hidden></canvas>
+      </div>
+
+      <!-- overlay content -->
+      <div class="relative z-10 h-full flex flex-col justify-center lg:justify-end p-6 lg:p-12">
+        <div class="max-w-3xl text-right arabic" data-aos="fade-up" data-aos-duration="800">
+          <span class="inline-block text-xs uppercase px-3 py-1 rounded-full text-green-300 bg-white/5">Stand with Gaza</span>
+
+          <h2 class="mt-4 text-3xl lg:text-5xl font-extrabold leading-tight-ar">غزة — أصوات الصمود والأمل</h2>
+          <p class="mt-3 text-gray-300 max-w-2xl">مساحة لتذكّر المتأثرين، رفع الوعي، والمساهمة في دعم من يحتاج. استعرض الصور، تأمل في الكلمات، وفكر في التبرع لمنظمات موثوقة.</p>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#gallery" class="px-4 py-2 bg-white/6 rounded-md text-sm hover:bg-white/10 transition">تصفح المعرض</a>
+            <a href="#donate" class="px-4 py-2 bg-gradient-to-r from-red-500 to-rose-500 rounded-md text-sm font-semibold shadow hover:scale-105 transition">تبرع</a>
+            <button id="gaza-btn" class="px-4 py-2 border border-white/8 rounded-md text-sm hover:scale-105 transition">Gaza</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- soft bottom fade -->
+      <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="mt-10">
+      <div class="flex items-center justify-between">
+        <h3 class="text-2xl font-semibold arabic">المعرض</h3>
+        <p class="text-sm text-gray-400 arabic">صور مؤثرة — استبدلها بسهولة لاحقًا</p>
+      </div>
+
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Gallery item template (replace src with real images or Flask static path) -->
+        <!-- Each figure uses overlay + zoom on hover -->
+        <!-- Repeat items (4 shown, add more as needed) -->
+        <figure class="relative overflow-hidden rounded-2xl group">
+          <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=1200&q=60"
+               alt="Gaza placeholder 1" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-[1.06]" loading="lazy" />
+          <div class="absolute inset-0 overlay transition-opacity duration-400 opacity-0 group-hover:opacity-100"></div>
+          <figcaption class="absolute bottom-4 right-4 left-4 text-right text-sm text-white opacity-0 translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+            <div class="bg-black/30 px-3 py-2 rounded-md backdrop-blur-sm">
+              <strong class="block">لحظة من الحياة</strong>
+              <span class="text-gray-200/80 text-xs">استبدال بالصورة الحقيقية متاح.</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="relative overflow-hidden rounded-2xl group">
+          <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1200&q=60"
+               alt="Gaza placeholder 2" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-[1.06]" loading="lazy" />
+          <div class="absolute inset-0 overlay transition-opacity duration-400 opacity-0 group-hover:opacity-100"></div>
+          <figcaption class="absolute bottom-4 right-4 left-4 text-right text-sm text-white opacity-0 translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+            <div class="bg-black/30 px-3 py-2 rounded-md backdrop-blur-sm">
+              <strong class="block">صمود</strong>
+              <span class="text-gray-200/80 text-xs">وصف مختصر للصورة.</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="relative overflow-hidden rounded-2xl group">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60"
+               alt="Gaza placeholder 3" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-[1.06]" loading="lazy" />
+          <div class="absolute inset-0 overlay transition-opacity duration-400 opacity-0 group-hover:opacity-100"></div>
+          <figcaption class="absolute bottom-4 right-4 left-4 text-right text-sm text-white opacity-0 translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+            <div class="bg-black/30 px-3 py-2 rounded-md backdrop-blur-sm">
+              <strong class="block">أمل</strong>
+              <span class="text-gray-200/80 text-xs">وصف مختصر هنا.</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="relative overflow-hidden rounded-2xl group">
+          <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=60"
+               alt="Gaza placeholder 4" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-[1.06]" loading="lazy" />
+          <div class="absolute inset-0 overlay transition-opacity duration-400 opacity-0 group-hover:opacity-100"></div>
+          <figcaption class="absolute bottom-4 right-4 left-4 text-right text-sm text-white opacity-0 translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+            <div class="bg-black/30 px-3 py-2 rounded-md backdrop-blur-sm">
+              <strong class="block">ذكريات</strong>
+              <span class="text-gray-200/80 text-xs">قابلية استبدال الصورة بسهولة.</span>
+            </div>
+          </figcaption>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- QUOTES -->
+    <section id="quotes" class="mt-12">
+      <h3 class="text-2xl font-semibold arabic">آيات وأحاديث</h3>
+      <p class="text-sm text-gray-400 arabic mt-1">كلمات للتأمل: الصبر، الأخوّة، ونصرة المظلوم.</p>
+
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <blockquote class="p-6 rounded-2xl glass shadow-lg arabic" data-aos="fade-up" data-aos-duration="600">
+          <div class="flex items-start gap-4">
+            <div class="flex-none">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-green-300 font-semibold">قُرْآن</div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-right text-lg font-medium leading-relaxed-ar" dir="rtl">وَاعْتَصِمُوا بِحَبْلِ اللَّهِ جَمِيعًا وَلَا تَفَرَّقُوا</p>
+              <p class="mt-3 text-sm text-gray-300">“واعتصموا بحبل الله جميعًا ولا تفرقوا” — تذكير بالوحدة والتكاتف.</p>
+              <p class="mt-3 text-xs text-gray-500">(آية — يرجى ذكر المرجع عند النشر الرسمي)</p>
+            </div>
+          </div>
+        </blockquote>
+
+        <blockquote class="p-6 rounded-2xl glass shadow-lg" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100">
+          <div class="flex items-start gap-4">
+            <div class="flex-none">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-amber-300 font-semibold">حديث</div>
+            </div>
+            <div>
+              <p class="text-lg font-medium">"خير الناس أنفعهم للناس"</p>
+              <p class="mt-3 text-sm text-gray-300">حديث يُحفز على مساعدة الآخرين والعمل لصالح المجتمع.</p>
+              <p class="mt-3 text-xs text-gray-500">(راجع مصادر الحديث للتوثيق الرسمي)</p>
+            </div>
+          </div>
+        </blockquote>
+
+        <blockquote class="p-6 rounded-2xl glass shadow-lg arabic" data-aos="fade-up" data-aos-duration="600" data-aos-delay="200">
+          <div class="flex items-start gap-4">
+            <div class="flex-none">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-blue-300 font-semibold">قُرْآن</div>
+            </div>
+            <div>
+              <p class="text-right text-lg font-medium leading-relaxed-ar" dir="rtl">إِنَّمَا الْمُؤْمِنُونَ إِخْوَةٌ</p>
+              <p class="mt-3 text-sm text-gray-300">“المؤمنون إخوة” — دعوة للترابط والتراحم.</p>
+            </div>
+          </div>
+        </blockquote>
+
+        <blockquote class="p-6 rounded-2xl glass shadow-lg" data-aos="fade-up" data-aos-duration="600" data-aos-delay="300">
+          <div class="flex items-start gap-4">
+            <div class="flex-none">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-red-300 font-semibold">حديث</div>
+            </div>
+            <div>
+              <p class="text-lg font-medium">"من فرّج عن مؤمن كربة من كرب الدنيا فرّج الله عنه كربة من كرب يوم القيامة"</p>
+              <p class="mt-3 text-sm text-gray-300">تشجيع على تفريج الهموم ومساعدة المحتاجين.</p>
+            </div>
+          </div>
+        </blockquote>
+      </div>
+
+      <p class="mt-4 text-xs text-gray-500">ملاحظة: اقتباسات مكتوبة هنا للعرض — عند النشر الرسمي أدرج مصادر موثوقة وحواشي صحيحة.</p>
+    </section>
+      <!-- ABOUT GAZA -->
+    <section id="gaza" class="mt-12">
+      <div class="rounded-2xl glass shadow-xl p-8" data-aos="fade-up">
+        <h3 class="text-2xl font-bold arabic mb-4">عن غزة</h3>
+        <p class="text-gray-300 arabic leading-relaxed">
+          غزة ليست مجرد مكان على الخريطة، بل قصة صمود وأمل رغم التحديات.
+          يمكنك دعم أهلها بالدعاء، بالمساهمة المالية، أو حتى بنشر الوعي بين الناس.
+        </p>
+        <ul class="list-disc pr-6 mt-4 text-gray-400 arabic space-y-2">
+          <li>بالدعاء: تذكّرهم في صلواتك.</li>
+          <li>بالمساهمة: تبرع لمنظمات موثوقة.</li>
+          <li>بالمشاركة: انشر الوعي عبر وسائل التواصل.</li>
+          <li>بالقلب: تعاطفك ودعمك المعنوي له قيمة عظيمة.</li>
+        </ul>
+      </div>
+    </section>
+
+<!-- قسم التبرعات -->
+<section id="donate" class="mx-auto max-w-7xl px-4 py-16 md:py-24">
+  <div class="rounded-3xl border border-gray-700 bg-black/90 p-10 md:p-14 shadow-soft relative overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-red-500/20"></div>
+    <div class="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-green-500/20"></div>
+
+    <div class="relative z-10 grid md:grid-cols-2 gap-10 items-center text-right">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">ادعم الجمعيات الموثوقة</h2>
+        <p class="mt-4 text-gray-400">
+          تبرعك يمكن أن يساعد في توفير المساعدات الطبية، الطعام، والمأوى. الزر التالي
+          يوجهك إلى موقع موثوق للتبرعات.
+        </p>
+        <ul class="mt-6 text-sm text-gray-400 list-disc pr-5">
+          <li>زر واضح وسهل الاستخدام</li>
+          <li>يفتح الرابط في نافذة جديدة بأمان</li>
+          <li>يمكنك تغيير الرابط بسهولة</li>
+        </ul>
+      </div>
+      <div class="text-center">
+        <a
+          id="donate-link"
+          href="https://www.unrwa.org/donate"
+          target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-red-600 text-white font-semibold shadow-lg hover:shadow-red-500/70 hover:-translate-y-1 hover:scale-105 active:scale-95 transition focus:outline-none focus:ring-4 focus:ring-red-400/70 animate-pulse"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41
+            1.01 4.22 2.53C11.09 5.01 12.76 4 14.5 4 17
+            4 19 6 19 8.5c0 3.78-3.4
+            6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          تبرع الآن
+        </a>
+        <p class="mt-3 text-xs text-gray-500">يمكنك استبدال الرابط بأي جمعية تفضلها.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="mt-16 border-t border-gray-700 bg-black/90 py-8 text-sm text-gray-400">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="arabic text-center md:text-right">
+      © <span id="year"></span> غـزة — صفحة توعية ودعم
+    </p>
+    <div class="flex gap-6">
+      <a class="hover:text-red-500 transition" href="#">الخصوصية</a>
+      <a class="hover:text-red-500 transition" href="#">الشروط</a>
+    </div>
+  </div>
+</footer>
+<script>
+  // لتحديث السنة تلقائياً
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+  </div>
+
+  <!-- SCRIPTS -->
+
+  <!-- AOS init -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, offset: 100, duration: 500, easing: 'ease-out-cubic' });
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- THREE.JS HERO (flag + particles + soft glow) -->
+  <script>
+    (function(){
+      // Basic scene + renderer
+      const canvas = document.getElementById('hero-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setClearColor(0x000000, 0); // transparent background
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(35, 2, 0.1, 100);
+      camera.position.set(0, 0, 5.2);
+
+      // lighting
+      const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+      scene.add(ambient);
+      const dir = new THREE.DirectionalLight(0xffffff, 0.15);
+      dir.position.set(-2, 2, 5);
+      scene.add(dir);
+
+      // flag plane geometry (subdivided for smooth waves)
+      const planeW = 4.4, planeH = 2.6;
+      const geo = new THREE.PlaneGeometry(planeW, planeH, 128, 64);
+
+      // shader material (similar to previous but smoother and tinted)
+      const mat = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uAmp: { value: 0.12 },
+          uRes: { value: new THREE.Vector2() }
+        },
+        vertexShader: `
+          uniform float uTime;
+          uniform float uAmp;
+          varying vec2 vUv;
+          varying vec3 vPos;
+          void main(){
+            vUv = uv;
+            vPos = position;
+            float wave = sin((position.x * 6.0) + uTime * 2.0) * (uAmp * (1.0 - abs(position.y) * 0.6));
+            vec3 pos = position + normal * wave * 0.8;
+            pos.z += sin((position.x * 2.0) + uTime * 1.3) * (uAmp * 0.05) ;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec2 vUv;
+          void main(){
+            vec3 blackC = vec3(0.06,0.06,0.06);
+            vec3 whiteC = vec3(0.98,0.98,0.97);
+            vec3 greenC = vec3(0.06,0.56,0.34);
+            vec3 redC   = vec3(0.86,0.18,0.18);
+
+            float y = vUv.y;
+            vec3 stripe = (y > 0.66) ? blackC : (y > 0.33 ? whiteC : greenC);
+
+            // triangle near left (hoist)
+            float tri = smoothstep(0.0, 0.02, (0.35 - vUv.x) - abs(vUv.y - 0.5)*0.9);
+
+            vec3 color = mix(stripe, redC, tri);
+
+            // subtle vignette
+            float d = distance(vUv, vec2(0.5));
+            color *= mix(1.0, 0.88, smoothstep(0.5, 0.95, d));
+
+            gl_FragColor = vec4(color,1.0);
+          }
+        `,
+        side: THREE.DoubleSide,
+      });
+
+      const flag = new THREE.Mesh(geo, mat);
+      scene.add(flag);
+      flag.rotation.y = -0.05;
+      flag.rotation.x = 0.02;
+
+      // Add soft glowing disc behind the flag for depth
+      const glowGeo = new THREE.CircleGeometry(1.8, 64);
+      const glowMat = new THREE.MeshBasicMaterial({ color: 0x0b1220, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
+      const glow = new THREE.Mesh(glowGeo, glowMat);
+      glow.position.set(-0.8, 0, -1.2);
+      glow.scale.set(2.6, 2.6, 1);
+      scene.add(glow);
+
+      // Particles (points)
+      const particlesCount = 120;
+      const positions = new Float32Array(particlesCount * 3);
+      for (let i=0;i<particlesCount;i++){
+        positions[i*3+0] = (Math.random()-0.5) * 6.5;
+        positions[i*3+1] = (Math.random()-0.5) * 3.2;
+        positions[i*3+2] = (Math.random()-0.5) * 1.4;
+      }
+      const partGeo = new THREE.BufferGeometry();
+      partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const partMat = new THREE.PointsMaterial({ size: 0.02, sizeAttenuation: true, transparent: true, opacity: 0.85 });
+      const parts = new THREE.Points(partGeo, partMat);
+      scene.add(parts);
+
+      // Resize utils
+      function resize() {
+        const container = document.getElementById('hero-3d');
+        const rect = container.getBoundingClientRect();
+        const w = Math.max(300, rect.width);
+        const h = Math.max(150, rect.height);
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize);
+      window.addEventListener('orientationchange', resize);
+      resize();
+
+      // subtle mouse parallax
+      let mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        mouseX = (e.clientX / w) * 2 - 1;
+        mouseY = (e.clientY / h) * 2 - 1;
+      });
+
+      // animation loop
+      let last = 0;
+      function animate(t){
+        t *= 0.001;
+        mat.uniforms.uTime.value = t;
+        // sway flag
+        flag.rotation.z = Math.sin(t * 0.6) * 0.02;
+        // particles float
+        parts.rotation.y = Math.sin(t * 0.1) * 0.08;
+        // parallax
+        flag.rotation.y = -0.06 + mouseX * 0.02;
+        flag.rotation.x = 0.02 + mouseY * 0.01;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+
+      // touch: small tilt on touch
+      window.addEventListener('touchmove', (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        const t0 = e.touches[0];
+        mouseX = (t0.clientX / window.innerWidth) * 2 - 1;
+        mouseY = (t0.clientY / window.innerHeight) * 2 - 1;
+      });
+
+    })();
+  </script>
+
+  <!-- Small UI interactions -->
+  <script>
+    document.getElementById('gaza-btn').addEventListener('click', () => {
+      const btn = document.getElementById('gaza-btn');
+      btn.animate([{ transform: 'scale(1)' }, { transform:'scale(1.06)' }, { transform:'scale(1)' }], { duration: 260, easing: 'ease-out' });
+      document.querySelector('#gallery').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('learn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('#quotes').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
+</body>
+</html>

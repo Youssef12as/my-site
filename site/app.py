@@ -96,7 +96,9 @@ def snake():
 def mouse():
     return render_template("mouse_game.html")
 
-
+@app.route("/gaza")
+def gaza():
+    return render_template("gaza.html")
 
 
 @app.route("/all_users")
