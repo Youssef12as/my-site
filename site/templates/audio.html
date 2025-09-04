@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3D Audio Volume Adjuster</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+  body {
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    font-family: 'Orbitron', sans-serif;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    background: #2c2a3a;
+    border-radius: 20px;
+    padding: 40px 60px;
+    box-shadow:
+      8px 8px 15px #1a1824,
+      -8px -8px 15px #3a3850;
+    width: 360px;
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-shadow:
+      0 0 5px #7f7fff,
+      0 0 10px #7f7fff;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  label[for="audiofile"] {
+    display: inline-block;
+    background: linear-gradient(145deg, #3a3a5a, #2a2a3a);
+    border-radius: 12px;
+    padding: 12px 25px;
+    cursor: pointer;
+    box-shadow:
+      4px 4px 6px #1a1a2a,
+      -4px -4px 6px #4a4a6a;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    user-select: none;
+  }
+
+  label[for="audiofile"]:hover {
+    box-shadow:
+      inset 4px 4px 6px #1a1a2a,
+      inset -4px -4px 6px #4a4a6a;
+  }
+
+  .slider-container {
+    margin: 30px 0 40px;
+    user-select: none;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #3a3a5a, #2a2a3a);
+    box-shadow:
+      4px 4px 6px #1a1a2a,
+      -4px -4px 6px #4a4a6a;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #7f7fff, #4f4fff);
+    box-shadow:
+      3px 3px 5px #3a3aff,
+      -3px -3px 5px #7f7fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    background: linear-gradient(145deg, #a0a0ff, #6f6fff);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #7f7fff, #4f4fff);
+    box-shadow:
+      3px 3px 5px #3a3aff,
+      -3px -3px 5px #7f7fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  input[type="range"]::-moz-range-thumb:hover {
+    background: linear-gradient(145deg, #a0a0ff, #6f6fff);
+  }
+
+  .volume-label {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #7f7fff;
+  }
+
+  button {
+    background: linear-gradient(145deg, #3a3a5a, #2a2a3a);
+    border: none;
+    border-radius: 15px;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #eee;
+    cursor: pointer;
+    box-shadow:
+      6px 6px 8px #1a1a2a,
+      -6px -6px 8px #4a4a6a;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+
+  button:hover {
+    box-shadow:
+      inset 6px 6px 8px #1a1a2a,
+      inset -6px -6px 8px #4a4a6a;
+  }
+
+  .loading {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #7f7fff;
+    text-shadow: 0 0 10px #7f7fff;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>3D Audio Volume Adjuster</h1>
+    <form id="uploadForm" method="POST" enctype="multipart/form-data" action="/audio">
+      <label for="audiofile">Choose Audio File</label>
+      <input type="file" id="audiofile" name="audiofile" accept="audio/*" required />
+
+      <div class="slider-container">
+        <div class="volume-label">Volume: <span id="volumeValue">100%</span></div>
+        <input type="range" id="volume" name="volume" min="0" max="200" value="100" />
+      </div>
+
+      <button type="submit">Process & Download</button>
+      <div class="loading" id="loadingText">Processing... Please wait.</div>
+    </form>
+  </div>
+
+<script>
+  const volumeSlider = document.getElementById('volume');
+  const volumeValue = document.getElementById('volumeValue');
+  const form = document.getElementById('uploadForm');
+  const loadingText = document.getElementById('loadingText');
+
+  volumeSlider.addEventListener('input', () => {
+    volumeValue.textContent = volumeSlider.value + '%';
+  });
+
+  form.addEventListener('submit', () => {
+    loadingText.style.display = 'block';
+  });
+</script>
+</body>
+</html>
