@@ -1,15 +1,10 @@
 Flask cs50
 you should downgrade python version, follow these steps:
 
-1) sudo apt update
-2) sudo apt install python3.12 python3.12-venv python3.12-dev -y
 
-
-3) python3.12 -m venv py312env
-4) source py312env/bin/activate
-5) check version by "python --version" it should be 3.12
-
-6) pip install flask pydub cs50 ffmpeg-python
+1) source py312env/bin/activate
+2) check version by "python --version" it should be 3.12
+3) pip install flask pydub cs50 ffmpeg-python
 
 then you can flask run
 
