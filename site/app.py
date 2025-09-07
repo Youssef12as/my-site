@@ -1,10 +1,17 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+import math
+import ffmpeg
+import io
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from cs50 import SQL
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret")
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'mp3', 'wav', 'ogg', 'flac', 'm4a'}
+
 
 # قاعدة البيانات
 db = SQL("sqlite:///users.db")
@@ -99,6 +106,44 @@ def mouse():
 @app.route("/gaza")
 def gaza():
     return render_template("gaza.html")
+
+@app.route('/audio', methods=['GET', 'POST'])
+def audio():
+    if request.method == 'POST':
+        if 'audiofile' not in request.files:
+            return redirect(request.url)
+        file = request.files['audiofile']
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            ext = file.filename.rsplit('.', 1)[1].lower()
+            volume_percent = float(request.form.get('volume', 100))
+
+            # Convert percent → ffmpeg volume multiplier
+            volume_factor = volume_percent / 100.0
+
+            # Run ffmpeg and capture output
+            out, err = (
+                ffmpeg
+                .input('pipe:0')
+                .filter('volume', volume=volume_factor)
+                .output('pipe:1', format=ext)
+                .run(input=file.read(), capture_stdout=True, capture_stderr=True)
+            )
+
+            buf = io.BytesIO(out)
+            buf.seek(0)
+
+            return send_file(
+                buf,
+                as_attachment=True,
+                download_name=f"volume_adjusted.{ext}",
+                mimetype=f"audio/{ext}"
+            )
+        else:
+            return redirect(request.url)
+    return render_template('audio.html')
+
 
 
 @app.route("/all_users")
