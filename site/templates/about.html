@@ -3,32 +3,63 @@
 {% block title %}About Us{% endblock %}
 
 {% block content %}
-  <!-- Hero Section / Brief -->
-  <section id="home" class="hero-section">
-    <h2 class="text-5xl font-bold mb-6">Meet Our Visionary Team</h2>
-    <p>
-      We are three Computer Engineering students at Cairo University, Faculty of Engineering (CUFE).
-      Last year, during our preparatory studies, we ranked among the top 70 students in our class.
-      Working as a team has always been one of our strongest points, and together we’ve taken part in multiple projects that sharpened both our technical and collaborative skills
+  <!-- Intro Section -->
+  <section id="intro" class="relative text-center py-20 bg-gradient-to-b from-[#0a0a0a] to-[#121212]">
+    <h2 class="text-4xl font-extrabold mb-6 text-cyan-400">
+      Need Free Code or Support?
+    </h2>
+    <p class="max-w-3xl mx-auto text-gray-300 leading-relaxed text-lg">
+      If you are looking for ready-to-use code, project assistance, or even a personal portfolio,
+      feel free to reach out to us. Everything we offer is <span class="text-purple-400 font-bold">completely free</span>.
     </p>
   </section>
 
-  <!-- Three Person Boxes -->
-  <section class="py-16 bg-[#121212]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+  <!-- About Us Section -->
+  <section id="about" class="relative text-center py-16 bg-[#0f0f0f]">
+    <h2 class="text-5xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
+      Who We Are
+    </h2>
+    <p class="max-w-4xl mx-auto text-gray-300 leading-relaxed text-lg">
+      We are
+      <span class="text-cyan-400 font-bold">Youssef Sayed</span>,
+      <span class="text-purple-400 font-bold">Mohamed Osama</span>, and
+      <span class="text-pink-400 font-bold">Nour Ibrahim</span> —
+      Computer Engineering students at Cairo University, Faculty of Engineering (Computer Department).
+      This website is one of our collaborative projects where we applied what we have learned both technically and practically.
+    </p>
+  </section>
 
-        <div class="person-card">
-            <h3>Youssef Sayed</h3>
-            <p>Youssef has a sharp eye for details and a natural gift for critical thinking. His contributions were vital in his Critical Thinking project team, and later he impressed with a structured and confident presentation in his Societal Issues group. He thrives when solving tough problems and inspiring others to think deeper</p>
-        </div>
-        <div class="person-card">
-            <h3>Mohamed Osama</h3>
-            <p>Mohamed brings balance and reliability to every project he joins. With his analytical mindset, he quickly breaks down challenges into manageable steps. He is always ready to support his colleagues, making teamwork smoother and more productive. His dedication to learning was evident when he completed CS50, strengthening both his programming skills and his confidence as a future engineer.</p>
-        </div>
-        <div class="person-card">
-            <h3>Nour Ibrahim</h3>
-            <p>Nour is known for her persistence and creativity. She is one of those hardworking teammates who never hesitate to step in and help others. During group work, she often takes the initiative to keep things organized and clear. Her experience with CS50 gave her a strong foundation in coding and problem-solving, which she actively shares with peers</p>
-        </div>
+  <!-- Skills/Experience Section -->
+  <section class="py-20 bg-gradient-to-b from-[#121212] to-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      <!-- Card 1 -->
+      <div class="backdrop-blur-lg bg-white/10 border border-white/20 p-8 rounded-2xl shadow-lg hover:shadow-cyan-500/30 hover:scale-105 transition transform duration-300">
+        <h3 class="text-2xl font-bold text-cyan-400 mb-4">Mastering GitHub</h3>
+        <p class="text-gray-300 leading-relaxed">
+          We explored how to collaborate effectively using GitHub.
+          Version control helped us stay organized, track progress, and work smoothly as a team across different parts of the project.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="backdrop-blur-lg bg-white/10 border border-white/20 p-8 rounded-2xl shadow-lg hover:shadow-purple-500/30 hover:scale-105 transition transform duration-300">
+        <h3 class="text-2xl font-bold text-purple-400 mb-4">Applying CS50</h3>
+        <p class="text-gray-300 leading-relaxed">
+          By practicing challenges from Harvard’s CS50 course, we strengthened our problem-solving mindset.
+          These exercises trained us to break down complex problems and approach solutions step by step.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="backdrop-blur-lg bg-white/10 border border-white/20 p-8 rounded-2xl shadow-lg hover:shadow-pink-500/30 hover:scale-105 transition transform duration-300">
+        <h3 class="text-2xl font-bold text-pink-400 mb-4">Building Web Skills</h3>
+        <p class="text-gray-300 leading-relaxed">
+          We gained hands-on experience in web development by designing and coding this website.
+          From front-end styling to back-end logic, this project helped us connect theory with practice.
+        </p>
+      </div>
+
     </div>
   </section>
 {% endblock %}

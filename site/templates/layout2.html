@@ -1,291 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}About Us{% endblock %}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>{% block title %}Imposters{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkfQ17kLecxB1W1wA6x3m2QMaHJ9a2R8G2vQ4YF3nKxO3Q5xN6C8e9+ug==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
-    /* Cipher Tool Styles */
-.form-container {
-  max-width: 600px;
-  margin: 3rem auto;
-  background-color: #1f1f1f;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(204, 0, 0, 0.5);
-}
+    :root{
+      --bg:#0d0f13;
+      --card:#0f1218;
+      --text:#e7edf1;
+      --muted:#a5b1bb;
+      --accent:#36e3c0;
+      --accent-2:#4ef2dc;
+      --ring: 0 0 0 2px var(--accent) inset, 0 0 24px 2px rgba(54,227,192,.25);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      background: radial-gradient(1200px 1200px at 80% -10%, rgba(54,227,192,.08), transparent 55%),
+                  radial-gradient(800px 800px at -10% 60%, rgba(54,227,192,.06), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+      display:flex; flex-direction:column;
+      min-height:100vh;
+    }
 
-.form-container h2 {
-  color: #ff4d4d;
-}
+    /* --- Top Nav --- */
+    .nav{
+      width:100%; position:fixed; top:0; left:0; z-index:50;
+      backdrop-filter:saturate(140%) blur(6px);
+      background:linear-gradient(to bottom, rgba(13,15,19,.9), rgba(13,15,19,.6));
+      border-bottom:1px solid #12151c;
+    }
+    .nav .wrap{max-width:1150px; margin:0 auto; display:flex; align-items:center; gap:20px; padding:12px 16px;}
+    .logo{font-weight:800; font-size:20px; display:flex; align-items:center; gap:6px;}
+    .logo b{color:#fff}
+    .logo i{color:var(--accent); font-style:normal}
+    .nav ul{list-style:none; display:flex; gap:22px; margin:0 0 0 auto; padding:0}
+    .nav a{color:var(--muted); text-decoration:none; font-weight:500; position:relative; padding:.25rem .4rem; border-radius:10px;}
+    .nav a:hover{color:var(--text)}
+    .nav a::after{content:""; position:absolute; left:.4rem; right:.4rem; bottom:0; height:2px;
+      background:linear-gradient(90deg,transparent, var(--accent), transparent); transform:scaleX(0);
+      transform-origin:center; transition:.35s ease}
+    .nav a:hover::after{transform:scaleX(1)}
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #ff4d4d;
-}
+    /* Content */
+    main{flex:1; padding-top:80px;} /* leaves space for fixed nav */
 
-input[type="text"],
-input[type="number"] {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  box-sizing: border-box;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus {
-  outline: none;
-  box-shadow: 0 0 8px #cc0000;
-  background-color: #3a3a3a;
-}
-
-.btn {
-  background-color: #cc0000;
-  color: #fff;
-  font-weight: 700;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1.125rem;
-  transition: background-color 0.3s ease;
-  margin-right: 1rem;
-}
-
-.btn:hover,
-.btn:focus {
-  background-color: #ff3333;
-  outline: none;
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border: 2px solid #cc0000;
-  color: #cc0000;
-  font-weight: 700;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  font-size: 1.125rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.btn-secondary:hover,
-.btn-secondary:focus {
-  background-color: #cc0000;
-  color: #fff;
-  outline: none;
-}
-
-#result {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-}
-
-    /* General link styling */
-a {
-  position: relative;
-  color: #ff4d4d; /* main red for links */
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-/* underline effect on hover */
-a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px; /* little below the text */
-  width: 0;
-  height: 2px;
-  background-color: currentColor;
-  transition: width 0.3s ease;
-}
-
-/* on hover: change color + animate underline */
-a:hover,
-a:focus {
-  color: #ff9999;
-}
-
-a:hover::after,
-a:focus::after {
-  width: 100%;
-}
-
-    /* Black and red color palette */
-    body {
-      background: #121212;
-      color: #e0e0e0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    nav {
-      background-color: #1a1a1a;
-      box-shadow: 0 2px 8px rgba(204, 0, 0, 0.7);
-    }
-    .navbar-link {
-      position: relative;
-      color: #ddd;
-      font-weight: 600;
-      padding: 0.5rem 0.75rem;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .navbar-link::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: #cc0000;
-      transition: width 0.3s ease;
-    }
-    .navbar-link:hover,
-    .navbar-link:focus {
-      color: #ff4d4d;
-    }
-    .navbar-link:hover::before,
-    .navbar-link:focus::before {
-      width: 100%;
-    }
-    .hero-section {
-      background: linear-gradient(135deg, #1a1a1a 0%, #660000 100%);
-      color: #f8f8f8;
-      padding: 5rem 1rem;
-      text-align: center;
-    }
-    .hero-section p {
-      background-color: rgba(255, 0, 0, 0.1);
-      padding: 1.5rem;
-      border-radius: 1rem;
-      max-width: 700px;
-      margin: 0 auto;
-      font-size: 1.125rem;
-      line-height: 1.6;
-      color: #f0f0f0;
-    }
-    .person-card {
-      background-color: #1f1f1f;
-      color: #e0e0e0;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 15px rgba(204, 0, 0, 0.5);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      text-align: center;
-    }
-    .person-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 30px rgba(255, 0, 0, 0.8);
-      background-color: #2a2a2a;
-    }
-    .person-card h3 {
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-      color: #ff3333;
-    }
-    .person-card p {
-      font-size: 1rem;
-      color: #ccc;
-    }
-    footer {
-      background: linear-gradient(135deg, #0d0d0d 0%, #330000 100%);
-      color: #ccc;
-      padding: 2rem 1rem;
-      text-align: center;
-      margin-top: auto;
-    }
-    footer a {
-      color: #ff4d4d;
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-    footer a:hover,
-    footer a:focus {
-      color: #ff9999;
-    }
-    /* Mobile menu toggle button */
-    #mobile-menu-toggle {
-      color: #ddd;
-      padding: 0.5rem;
-      cursor: pointer;
-      background: none;
-      border: none;
-    }
-    #mobile-menu {
-      background-color: #1a1a1a;
-      border-top: 1px solid #cc0000;
-    }
-    #mobile-menu a {
-      display: block;
-      padding: 0.75rem 1rem;
-      color: #ddd;
-      text-decoration: none;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    #mobile-menu a:hover,
-    #mobile-menu a:focus {
-      background-color: #660000;
-      color: #ff4d4d;
-    }
+    /* Footer */
+    footer{padding:20px; text-align:center; color:var(--muted); border-top:1px solid #12151c; background:#0c0f14;}
+    footer a{color:var(--accent); text-decoration:none; margin:0 6px;}
+    footer a:hover{color:var(--accent-2);}
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
-  <!-- Navbar -->
-  <nav>
-    <div class="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 h-16">
-      <h1 class="text-2xl font-extrabold text-red-600">Imposters' Profile</h1>
-      <div class="hidden md:flex space-x-8">
-        <a href="/home" class="navbar-link">Home</a>
-        <a href="/about" class="navbar-link">About</a>
-        <a href="/portfolio" class="navbar-link">Portfolio</a>
-        <a href="/contact" class="navbar-link">Contact</a>
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <div class="logo">
+        <b>Imposters</b><i>Web</i>
       </div>
-      <button id="mobile-menu-toggle" class="md:hidden" aria-label="Toggle menu" aria-expanded="false">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
-    </div>
-    <div id="mobile-menu" class="hidden md:hidden">
-      <a href="/home">Home</a>
-      <a href="/about">About</a>
-      <a href="/portfolio">Portfolio</a>
-      <a href="/contact">Contact</a>
+      <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/portfolio">Portfolio</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
     </div>
   </nav>
 
-  {% block content %}{% endblock %}
+  <!-- Content Block -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
-  <!-- Fixed Footer -->
+  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 imposters All rights reserved.</p>
+    <p>&copy; 2025 Imposters All rights reserved.</p>
   </footer>
-
-  <script>
-    const toggleButton = document.getElementById('mobile-menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    toggleButton.addEventListener('click', () => {
-      const isHidden = mobileMenu.classList.toggle('hidden');
-      toggleButton.setAttribute('aria-expanded', !isHidden);
-    });
-  </script>
 </body>
 </html>
 
