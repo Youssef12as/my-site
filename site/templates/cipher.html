@@ -1,25 +1,29 @@
-{% extends "layout.html" %}
+{% extends "layout2.html" %}
 
-{% block title %}
-    Cipher
-{% endblock %}
+{% block title %}Cipher Tool{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="box">
-            <h2>Cipher Tool</h2>
-            <form action="/cipher" method="POST" class="cipher-box">
-                <textarea name="plain_text" rows="4" autocomplete="off" autofocus placeholder="Type your text here..." required></textarea>
-                <input name="key" type="number" placeholder="Key Number" min="0" step="1" required>
-                <button type="submit" class="btn">Decode</button>
-            </form>
-        </div>
+  <main class="flex-grow">
+    <section class="form-container">
+      <h2 class="text-3xl font-bold mb-6 text-center">Cipher Tool</h2>
 
-        {% if cipher_text %}
-            <div class="result-box">
-                <h2>Result!</h2>
-                <p>{{ cipher_text }}</p>
-            </div>
-        {% endif %}
-    </div>
+      <form action="/cipher" method="POST" novalidate>
+        <label for="textInput">Enter text:</label>
+        <input type="text" id="textInput" name="plain_text" placeholder="Type your text here" required autocomplete="off" />
+
+        <label for="keyInput">Enter key (integer):</label>
+        <input type="number" id="keyInput" name="key" placeholder="Enter an integer key" required autocomplete="off" />
+
+        <div class="flex flex-wrap justify-center">
+          <button type="submit" class="btn">Decode!</button>
+        </div>
+      </form>
+
+      {% if result %}
+        <div id="result">
+          {{ result }}
+        </div>
+      {% endif %}
+    </section>
+  </main>
 {% endblock %}

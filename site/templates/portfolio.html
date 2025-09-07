@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout2.html" %}
 
 {% block title %}
     Portfolio
@@ -6,40 +6,44 @@
 
 {% block content %}
 
-<div class="container">
-  <h2 class="section-title">Our Projects</h2>
+<section id="home" class="hero-section">
+    <h2 class="text-5xl font-bold mb-6">Teamworking?</h2>
+    <p>Working together, Nour, Osama, and Youssef have built a strong sense of collaboration. Each of them brings unique problem-solving skills, and they constantly exchange ideas to find the best solutions. Their teamwork is marked by trust, balance, and the ability to support one another, which allows them to finish tasks more efficiently and with creativity.</p>
+</section>
 
-  <div class="about-container">
-    <div class="about-box">
-      <h3>CS50 Finance (Web App)</h3>
-      <p>Developed a full-stack stock trading web application where users can register, log in, and simulate buying and selling shares in real time.</p>
-      <ul>
-        <li>Tech Used: Python (Flask), SQL (SQLite), HTML, CSS, Jinja.</li>
-        <li>Key Features: User authentication, stock price lookup via API, portfolio tracking, transaction history</li>
-        <li>What We Learned: Database design, backend logic, and building user-friendly web interfaces</li>
-      </ul>
+  <section class="py-16 bg-[#121212]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="person-card">
+            <h3>CS50 Finance (Web App)</h3>
+                <p>Developed a full-stack stock trading web application where users can register, log in, and simulate buying and selling shares in real time.</p>
+            <ul>
+                <li>-Tech Used: Python (Flask), SQL (SQLite), HTML, CSS, Jinja.</li>
+                <li>-Key Features: User authentication, stock price lookup via API, portfolio tracking, transaction history</li>
+                <li>-What We Learned: Database design, backend logic, and building user-friendly web interfaces</li>
+            </ul>
     </div>
 
-    <div class="about-box">
+    <div class="person-card">
       <h3>Recover</h3>
       <p>
         Created a program in C that scans a memory card’s raw data and restores deleted JPEG images.
       </p>
       <ul>
-        <li>Tech Used: C, file I/O, binary manipulation</li>
-        <li>Key Features: Identifying JPEG signatures, handling raw memory blocks, outputting valid images</li>
-        <li>What We Learned: Low-level memory management, file system concepts, and debugging skills</li>
+        <li>-Tech Used: C, file I/O, binary manipulation</li>
+        <li>-Key Features: Identifying JPEG signatures, handling raw memory blocks, outputting valid images</li>
+        <li>-What We Learned: Low-level memory management, file system concepts, and debugging skills</li>
       </ul>
     </div>
-    <div class="about-box">
+    <div class="person-card">
       <h3>speller</h3>
       <p>Implemented a dictionary-based spell checker in C with efficient lookup using a hash table.</p>
       <ul>
-        <li>Tech Used: C, custom data structures</li>
-        <li>Key Features: Loads a large dictionary into memory, checks spelling of text files, reports efficiency stats</li>
-        <li>What We Learned: Data structures (hash tables), time vs. space trade-offs, algorithmic thinking</li>
+        <li>-Tech Used: C, custom data structures</li>
+        <li>-Key Features: Loads a large dictionary into memory, checks spelling of text files, reports efficiency stats</li>
+        <li>-What We Learned: Data structures (hash tables), time vs. space trade-offs, algorithmic thinking</li>
       </ul>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}

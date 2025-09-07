@@ -83,8 +83,8 @@ def contact():
 @app.route("/cipher", methods=["GET", "POST"])
 def cipher():
     if request.method == "POST":
-        cipher_text = code(request.form.get("plain_text"), int(request.form.get("key")))
-        return render_template("cipher.html", cipher_text=cipher_text)
+        result = code(request.form.get("plain_text"), int(request.form.get("key")))
+        return render_template("cipher.html", result=result)
     else:
         return render_template("cipher.html")
 
